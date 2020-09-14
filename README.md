@@ -12,4 +12,4 @@ You can use any of the editors listed, but for this workshop I will be using Vis
 
 ## Cloning The Completed Project
 
-To use the completed project, you must first clone it using `git clone https://github.com/Weetsy/wsuv-dsc-flutter-demo.git` or download the zip from the github repository. To open the project in VS Code go to File -> Open Folder and select the cloned project folder. 
+To use the completed project, you must first clone it using `git clone https://github.com/Weetsy/wsuv_dsc_flutter_demo.git` or download the zip from the github repository. To open the project in VS Code go to File -> Open Folder and select the cloned project folder. 
