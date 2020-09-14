@@ -4,26 +4,77 @@ void main() {
   runApp(MyApp());
 }
 
+class _DataBase {
+  var data; // This will contain our 2D array of data
+  var head; // This will keep track of how many items are in the structure
+  var favorites; // Holds favorites in a set
+  _DataBase() {
+    // Initialize our instance variables
+    favorites = Set<String>();
+    data = List<List<String>>();
+    head = 0;
+  }
+
+  // Creates the data
+  void recordData(String item, String description) {
+    data.add(List<String>());
+    data[head].add(item);
+    data[head].add(description);
+    head++;
+  }
+
+  // searches the structure for the string and returns the description
+  String getDescription(String item) {
+    for (int i = 0; i < head; i++) {
+      if (data[i][0] == item) {
+        return data[i][1];
+      }
+    }
+    print("Could not find an entry for '" + item + "' in the database.");
+    return null;
+  }
+
+  // Returns the name of entry at index i
+  String getNameAt(int i) {
+    return data[i][0];
+  }
+
+  void setFavorite(String item) {
+    for (int i = 0; i < head; i++) {
+      if (data[i][0] == item) {
+        // If the item is already a favorite
+        if (favorites.contains(data[i][0])) {
+          favorites.remove(item);
+        } else {
+          favorites.add(item);
+        }
+      }
+    }
+  }
+
+  // Check if the item is a favorite
+  bool isFavorite(String item) {
+    for (int i = 0; i < head; i++) {
+      if (favorites.contains(item)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Returns the number of entries in the data structure
+  int getEntryCount() {
+    return data.length;
+  }
+}
+
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
@@ -33,16 +84,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -54,47 +95,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _counter++;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
@@ -111,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
