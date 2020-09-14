@@ -105,7 +105,7 @@ class _MainViewState extends State<MainView> {
     _animalData.recordData("donkey", "A donkey.");
     // Create our image widgets
     for (int i = 0; i < _animalData.getEntryCount(); i++) {
-      print(i);
+      _awidgets.add(_createAEntry(_animalData.getNameAt(i)));
     }
     _objectData.recordData("apple", "A fruit.");
     for (int i = 0; i < _objectData.getEntryCount(); i++) {
@@ -122,11 +122,25 @@ class _MainViewState extends State<MainView> {
               })
         ],
       ),
-      body: Column(
-        children: [
-          Text("This is the homescreen!"),
-          Image.asset("assets/images/apple.jpg"),
-        ],
+      body: GridView.count(
+        crossAxisCount: 4, // How many elements per row
+        children: _awidgets,
+      ),
+    );
+  }
+
+  // Create animal widget
+  Widget _createAEntry(String animalName) {
+    return Material(
+      child: InkWell(
+        onTap: () {
+          print("Clicking on " + animalName + "!!");
+        },
+        child: Container(
+          child: ClipRRect(
+            child: Image.asset('images/' + animalName + '.jpg'),
+          ),
+        ),
       ),
     );
   }
