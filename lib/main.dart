@@ -72,57 +72,61 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Item Library',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MainView(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
+class MainView extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MainViewState createState() => _MainViewState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _MainViewState extends State<MainView> {
+  // Our DataBase instances
+  final _animalData = _DataBase(); // Create the animal-specific database
+  final _objectData = _DataBase(); // Create the object-specific database
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  // Lists containing our current widgets
+  final _awidgets = List<Widget>(); // Animal specific widgets
+  final _owidgets = List<Widget>(); // Object specific widgets
 
   @override
   Widget build(BuildContext context) {
+    // Populate our animal database with items
+    _animalData.recordData("jaguar", "A jaguar.");
+    _animalData.recordData("turtle", "A turtle.");
+    _animalData.recordData("rabbit", "A rabbit.");
+    _animalData.recordData("donkey", "A donkey.");
+    // Create our image widgets
+    for (int i = 0; i < _animalData.getEntryCount(); i++) {
+      print(i);
+    }
+    _objectData.recordData("apple", "A fruit.");
+    for (int i = 0; i < _objectData.getEntryCount(); i++) {
+      print(i);
+    }
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Home'),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.favorite),
+              onPressed: () {
+                print("Pushed the heart icon!");
+              })
+        ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+      body: Column(
+        children: [
+          Text("This is the homescreen!"),
+          Image.asset("assets/images/apple.jpg"),
+        ],
       ),
     );
   }
