@@ -134,7 +134,7 @@ class _MainViewState extends State<MainView> {
     return Material(
       child: InkWell(
         onTap: () {
-          print("Clicking on " + animalName + "!!");
+          _getADescription(animalName);
         },
         child: Container(
           child: ClipRRect(
@@ -143,5 +143,34 @@ class _MainViewState extends State<MainView> {
         ),
       ),
     );
+  }
+
+  // Push new view for animal description page
+  void _getADescription(String animal) {
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Animal details'),
+        ),
+        body: Center(
+            child: Column(
+          children: [
+            Text("\n\n" +
+                animal.toUpperCase() +
+                "\n\n" +
+                _animalData.getDescription(animal) +
+                "\n\n"),
+            Padding(padding: EdgeInsets.all(10)),
+            FlatButton(
+              child: Text("Test Button"),
+              onPressed: () {
+                print("Flat button was clicked!");
+              },
+            )
+          ],
+        )),
+      );
+    }));
   }
 }
