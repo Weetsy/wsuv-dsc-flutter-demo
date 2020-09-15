@@ -162,15 +162,41 @@ class _MainViewState extends State<MainView> {
                 _animalData.getDescription(animal) +
                 "\n\n"),
             Padding(padding: EdgeInsets.all(10)),
-            FlatButton(
-              child: Text("Test Button"),
-              onPressed: () {
-                print("Flat button was clicked!");
-              },
+            FavoriteButton(
+              data: _animalData,
+              objName: animal,
             )
           ],
         )),
       );
     }));
+  }
+}
+
+class FavoriteButton extends StatefulWidget {
+  final String objName;
+  final _DataBase data;
+
+  const FavoriteButton({Key key, this.objName, this.data}) : super(key: key);
+
+  @override
+  _FavoriteButtonState createState() => _FavoriteButtonState(objName, data);
+}
+
+class _FavoriteButtonState extends State<FavoriteButton> {
+  final String objName;
+  final _DataBase data;
+
+  _FavoriteButtonState(this.objName, this.data);
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+        child: Text(data.isFavorite(objName) ? "Favorited" : "Not Favorited"),
+        onPressed: () {
+          setState(() {
+            data.setFavorite(objName);
+          });
+        });
   }
 }
