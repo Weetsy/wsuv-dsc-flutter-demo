@@ -107,9 +107,10 @@ class _MainViewState extends State<MainView> {
     for (int i = 0; i < _animalData.getEntryCount(); i++) {
       _awidgets.add(_createAEntry(_animalData.getNameAt(i)));
     }
+    // Populate our object database with items
     _objectData.recordData("apple", "A fruit.");
     for (int i = 0; i < _objectData.getEntryCount(); i++) {
-      print(i);
+      _owidgets.add(_createOEntry(_objectData.getNameAt(i)));
     }
     return Scaffold(
       appBar: AppBar(
@@ -118,13 +119,131 @@ class _MainViewState extends State<MainView> {
           IconButton(
               icon: Icon(Icons.favorite),
               onPressed: () {
-                print("Pushed the heart icon!");
+                _checkFavorites();
               })
         ],
       ),
-      body: GridView.count(
-        crossAxisCount: 4, // How many elements per row
-        children: _awidgets,
+      body: Center(
+        child: Text("This is the homescreen!"),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              child: Text("Categories", style: TextStyle(fontSize: 40.0)),
+              decoration: BoxDecoration(
+                color: Colors.purple,
+              ),
+            ),
+            ListTile(
+              trailing: Icon(Icons.wc),
+              title: Text(
+                "Animals",
+                style: TextStyle(fontSize: 25.0),
+              ),
+              onTap: () {
+                // on click the animal gallery will get pushed onto the view stack
+                Navigator.of(context)
+                    .push(MaterialPageRoute<void>(builder: (BuildContext) {
+                  return Scaffold(
+                    appBar: AppBar(title: Text('Animals')),
+                    body: GridView.count(
+                      crossAxisCount: 4,
+                      children: _awidgets,
+                    ),
+                  );
+                }));
+              },
+            ),
+            ListTile(
+              trailing: Icon(Icons.laptop),
+              title: Text(
+                "Objects",
+                style: TextStyle(fontSize: 25.0),
+              ),
+              onTap: () {
+                // on click the object gallery will get pushed onto the view stack
+                Navigator.of(context)
+                    .push(MaterialPageRoute<void>(builder: (BuildContext) {
+                  return Scaffold(
+                    appBar: AppBar(title: Text('Objects')),
+                    body: GridView.count(
+                      crossAxisCount: 4,
+                      children: _owidgets,
+                    ),
+                  );
+                }));
+              },
+            ),
+            ListTile(
+              trailing: Icon(Icons.approval),
+              title: Text(
+                "Credits",
+                style: TextStyle(fontSize: 25.0),
+              ),
+              onTap: () {
+                // on click the object gallery will get pushed onto the view stack
+                Navigator.of(context)
+                    .push(MaterialPageRoute<void>(builder: (BuildContext) {
+                  return Scaffold(
+                    appBar: AppBar(title: Text('Credits')),
+                    body: GridView.count(
+                      crossAxisCount: 4,
+                      children: [
+                        Container(
+                          child: Center(
+                            child: Text(
+                              "Apple photo by Shelley Pauls @shelleypauls on unsplash.com",
+                              style: TextStyle(fontSize: 25.0),
+                            ),
+                          ),
+                        ),
+                        Image.asset("assets/images/apple.jpg"),
+                        Container(
+                          child: Center(
+                            child: Text(
+                              "Donkey photo by TS Sergey @ttsergey on unsplash.com",
+                              style: TextStyle(fontSize: 25.0),
+                            ),
+                          ),
+                        ),
+                        Image.asset("assets/images/donkey.jpg"),
+                        Container(
+                          child: Center(
+                            child: Text(
+                              "Rabbit photo by Satyabrata sm @smpicturez on unsplash.com",
+                              style: TextStyle(fontSize: 25.0),
+                            ),
+                          ),
+                        ),
+                        Image.asset("assets/images/rabbit.jpg"),
+                        Container(
+                          child: Center(
+                            child: Text(
+                              "Turtle photo by Wexor Tmg @wexor on unsplash.com",
+                              style: TextStyle(fontSize: 25.0),
+                            ),
+                          ),
+                        ),
+                        Image.asset("assets/images/turtle.jpg"),
+                        Container(
+                          child: Center(
+                            child: Text(
+                              "Jaguar photo by Uriel Soberanes @soberanes on unsplash.com",
+                              style: TextStyle(fontSize: 25.0),
+                            ),
+                          ),
+                        ),
+                        Image.asset("assets/images/jaguar.jpg"),
+                      ],
+                    ),
+                  );
+                }));
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -168,6 +287,83 @@ class _MainViewState extends State<MainView> {
             )
           ],
         )),
+      );
+    }));
+  }
+
+  // Create animal widget
+  Widget _createOEntry(String object) {
+    return Material(
+      child: InkWell(
+        onTap: () {
+          _getODescription(object);
+        },
+        child: Container(
+          child: ClipRRect(
+            child: Image.asset('images/' + object + '.jpg'),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Push new view for animal description page
+  void _getODescription(String object) {
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Object details'),
+        ),
+        body: Center(
+            child: Column(
+          children: [
+            Text("\n\n" +
+                object.toUpperCase() +
+                "\n\n" +
+                _objectData.getDescription(object) +
+                "\n\n"),
+            Padding(padding: EdgeInsets.all(10)),
+            FavoriteButton(
+              data: _objectData,
+              objName: object,
+            )
+          ],
+        )),
+      );
+    }));
+  }
+
+  // Load in a new page to view favorites
+  void _checkFavorites() {
+    final tempWidgets = List<Widget>();
+    // Check for favorite animals
+    for (int i = 0; i < _animalData.getEntryCount(); i++) {
+      // To add descriptions,
+      if (_animalData.isFavorite(_animalData.getNameAt(i))) {
+        print(_animalData.getNameAt(i) + " is a favorite");
+        tempWidgets.add(_awidgets[i]); // Add favorite into our temp array
+      }
+    }
+    // Check for favorite objects
+    for (int i = 0; i < _objectData.getEntryCount(); i++) {
+      // To add descriptions,
+      if (_objectData.isFavorite(_objectData.getNameAt(i))) {
+        print(_objectData.getNameAt(i) + " is a favorite");
+        tempWidgets.add(_owidgets[i]);
+      }
+    }
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Favorites'),
+        ),
+        body: GridView.count(
+          crossAxisCount: 4,
+          // Send our tempWidgets array to new page
+          children: tempWidgets,
+        ),
       );
     }));
   }
