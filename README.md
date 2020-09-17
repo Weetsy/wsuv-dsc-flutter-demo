@@ -10,6 +10,8 @@ If you are using an IDE for Flutter, please visit the following link to configur
 
 You can use any of the editors listed, but for this workshop I will be using Visual Studio Code.
 
+If you are using Visual Studio Code you can create a project directly from the IDE. On the menu bar, click View -> Command Palette and in the text field type in `flutter` and click Flutter: New Project.
+
 ## Cloning The Completed Project
 
 To use the completed project, you must first clone it using `git clone https://github.com/Weetsy/wsuv_dsc_flutter_demo.git` or download the zip from the github repository. To open the project in VS Code go to File -> Open Folder and select the cloned project folder. 
